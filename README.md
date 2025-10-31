@@ -1,5 +1,9 @@
 # Self-hosted AI starter kit
 
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg?logo=docker)](https://www.docker.com/)
+[![n8n](https://img.shields.io/badge/n8n-Powered-orange.svg?logo=n8n)](https://n8n.io/)
+
 **Self-hosted AI Starter Kit** is an open-source Docker Compose template designed to swiftly initialize a comprehensive local AI and low-code development environment.
 
 ![n8n.io - Screenshot](https://raw.githubusercontent.com/n8n-io/self-hosted-ai-starter-kit/main/assets/n8n-demo.gif)
@@ -7,6 +11,9 @@
 Curated by <https://github.com/n8n-io>, it combines the self-hosted n8n
 platform with a curated list of compatible AI products and components to
 quickly get started with building self-hosted AI workflows.
+
+> [!NOTE]
+> This is a personal fork with additional improvements. For the official version, visit [n8n-io/self-hosted-ai-starter-kit](https://github.com/n8n-io/self-hosted-ai-starter-kit).
 
 > [!TIP]
 > [Read the announcement](https://blog.n8n.io/self-hosted-ai/)
@@ -37,12 +44,25 @@ Engineering world, handles large amounts of data safely.
 
 ## Installation
 
+> 🚀 **New to this project?** Check out the [Quick Start Guide](QUICKSTART.md) for a 5-minute setup!
+
 ### Cloning the Repository
 
 ```bash
 git clone https://github.com/n8n-io/self-hosted-ai-starter-kit.git
 cd self-hosted-ai-starter-kit
 cp .env.example .env # you should update secrets and passwords inside
+```
+
+Or, using the Makefile (recommended):
+
+```bash
+git clone https://github.com/PabloCoello/n8n-personal-setup.git
+cd n8n-personal-setup
+make setup  # Creates .env and shared directory
+make generate-keys  # Generate secure encryption keys
+# Update .env with the generated keys
+make start  # Start with CPU profile (or make start PROFILE=gpu-nvidia)
 ```
 
 ### Running n8n using Docker Compose
@@ -216,6 +236,101 @@ interact with the local filesystem.
 - [Read/Write Files from Disk](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.filesreadwrite/)
 - [Local File Trigger](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.localfiletrigger/)
 - [Execute Command](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.executecommand/)
+
+### Using the Makefile
+
+This repository includes a Makefile for common operations:
+
+```bash
+make help          # Show all available commands
+make setup         # Initial setup (creates .env from template)
+make start         # Start all services (default: CPU profile)
+make start PROFILE=gpu-nvidia  # Start with Nvidia GPU support
+make stop          # Stop all services
+make logs          # View logs from all services
+make status        # Show status of services
+make backup        # Backup PostgreSQL database
+make check-env     # Validate environment variables
+make generate-keys # Generate secure encryption keys
+```
+
+## 🔧 Troubleshooting
+
+### Common Issues
+
+#### 1. n8n is not accessible at localhost:5678
+
+**Solution:**
+- Check if the container is running: `docker compose ps`
+- Check logs: `docker compose logs n8n`
+- Wait a minute after startup for n8n to initialize
+- Try restarting: `docker compose restart n8n`
+
+#### 2. Ollama models not downloading
+
+**Solution:**
+- Check Ollama logs: `docker compose logs ollama-cpu` (or `ollama-gpu`, `ollama-gpu-amd`)
+- Check the init container: `docker compose logs ollama-pull-llama-cpu`
+- Manual pull: `docker compose exec ollama-cpu ollama pull llama3.2`
+- Verify internet connection and disk space
+
+#### 3. PostgreSQL connection errors
+
+**Solution:**
+- Verify PostgreSQL is running: `docker compose ps postgres`
+- Check health: `docker compose exec postgres pg_isready -U root -d n8n`
+- Review logs: `docker compose logs postgres`
+- Ensure `.env` has correct credentials
+
+#### 4. Permission errors with shared directory
+
+**Solution:**
+- Check directory exists: `ls -la shared/`
+- Fix permissions: `chmod 755 shared/`
+- Restart n8n: `docker compose restart n8n`
+
+#### 5. GPU not detected (Nvidia)
+
+**Solution:**
+- Verify nvidia-docker is installed
+- Check GPU availability: `nvidia-smi`
+- Ensure you're using the correct profile: `docker compose --profile gpu-nvidia up`
+- Review [Ollama Docker GPU guide](https://github.com/ollama/ollama/blob/main/docs/docker.md)
+
+#### 6. Out of memory errors
+
+**Solution:**
+- Check available resources: `docker stats`
+- For Ollama, consider using smaller models
+- Increase Docker's memory limit in Docker Desktop settings
+- Use CPU profile if GPU memory is insufficient
+
+#### 7. Port already in use
+
+**Solution:**
+```bash
+# Find what's using the port
+lsof -i :5678  # or :6333, :11434
+
+# Stop the conflicting service or change ports in docker-compose.yml
+```
+
+#### 8. Environment variable errors
+
+**Solution:**
+- Ensure `.env` file exists: `ls -la .env`
+- Validate variables: `make check-env`
+- Regenerate secure keys: `make generate-keys`
+- Check for syntax errors in `.env` (no spaces around `=`)
+
+### Getting More Help
+
+If you're still experiencing issues:
+
+1. Check the [n8n documentation](https://docs.n8n.io)
+2. Visit the [n8n community forum](https://community.n8n.io/)
+3. Review [Docker Compose documentation](https://docs.docker.com/compose/)
+4. Open an issue with detailed information about your problem
 
 ## 📜 License
 
