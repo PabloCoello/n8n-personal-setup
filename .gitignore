@@ -4,7 +4,8 @@
 .env.*.local
 
 # Docker volumes and data
-shared/
+shared/*
+!shared/README.md
 n8n_storage/
 postgres_storage/
 ollama_storage/
