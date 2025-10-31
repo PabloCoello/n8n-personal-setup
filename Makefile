@@ -40,8 +40,14 @@ logs: ## Show logs from all services
 logs-n8n: ## Show n8n logs only
 	docker compose logs -f n8n
 
-logs-ollama: ## Show Ollama logs only
-	docker compose logs -f ollama-$(PROFILE)
+logs-ollama: ## Show Ollama logs only (use PROFILE=cpu/gpu-nvidia/gpu-amd)
+	@if docker compose ps | grep -q "ollama-$(PROFILE)"; then \
+		docker compose logs -f ollama-$(PROFILE); \
+	else \
+		echo "⚠ Ollama service with profile '$(PROFILE)' is not running."; \
+		echo "Available Ollama services:"; \
+		docker compose ps | grep ollama || echo "None running"; \
+	fi
 
 status: ## Show status of all services
 	docker compose ps

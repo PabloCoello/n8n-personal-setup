@@ -12,6 +12,9 @@ Curated by <https://github.com/n8n-io>, it combines the self-hosted n8n
 platform with a curated list of compatible AI products and components to
 quickly get started with building self-hosted AI workflows.
 
+> [!NOTE]
+> This is a personal fork with additional improvements. For the official version, visit [n8n-io/self-hosted-ai-starter-kit](https://github.com/n8n-io/self-hosted-ai-starter-kit).
+
 > [!TIP]
 > [Read the announcement](https://blog.n8n.io/self-hosted-ai/)
 
