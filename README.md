@@ -1,5 +1,9 @@
 # Self-hosted AI starter kit
 
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg?logo=docker)](https://www.docker.com/)
+[![n8n](https://img.shields.io/badge/n8n-Powered-orange.svg?logo=n8n)](https://n8n.io/)
+
 **Self-hosted AI Starter Kit** is an open-source Docker Compose template designed to swiftly initialize a comprehensive local AI and low-code development environment.
 
 ![n8n.io - Screenshot](https://raw.githubusercontent.com/n8n-io/self-hosted-ai-starter-kit/main/assets/n8n-demo.gif)
@@ -37,12 +41,25 @@ Engineering world, handles large amounts of data safely.
 
 ## Installation
 
+> 🚀 **New to this project?** Check out the [Quick Start Guide](QUICKSTART.md) for a 5-minute setup!
+
 ### Cloning the Repository
 
 ```bash
 git clone https://github.com/n8n-io/self-hosted-ai-starter-kit.git
 cd self-hosted-ai-starter-kit
 cp .env.example .env # you should update secrets and passwords inside
+```
+
+Or, using the Makefile (recommended):
+
+```bash
+git clone https://github.com/PabloCoello/n8n-personal-setup.git
+cd n8n-personal-setup
+make setup  # Creates .env and shared directory
+make generate-keys  # Generate secure encryption keys
+# Update .env with the generated keys
+make start  # Start with CPU profile (or make start PROFILE=gpu-nvidia)
 ```
 
 ### Running n8n using Docker Compose
